@@ -122,9 +122,8 @@ class KLibrosa {
         }
 
         val sourceFile = File(path)
-        var wavFile: WavFile? = null
 
-        wavFile = WavFile.openWavFile(sourceFile)
+        val wavFile = WavFile.openWavFile(sourceFile)
         var mNumFrames = wavFile.numFrames.toInt()
         var mSampleRate = wavFile.sampleRate.toInt()
         val mChannels = wavFile.numChannels
