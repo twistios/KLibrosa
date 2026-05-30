@@ -22,15 +22,17 @@ import java.util.stream.IntStream
  */
 class KLibrosa {
     private val BUFFER_SIZE = 4096
+
     @JvmField
-	var noOfFrames: Int = -1
+    var noOfFrames: Int = -1
     var sampleRate: Int = -1
         set(sampleRate) {
             field = sampleRate
             this.fMax = sampleRate / 2.0
         }
+
     @JvmField
-	var noOfChannels: Int = -1
+    var noOfChannels: Int = -1
 
     private var fMax = 44100 / 2.0
     private val fMin = 0.0
@@ -86,7 +88,11 @@ class KLibrosa {
      * @throws FileFormatNotSupportedException
      */
     @Throws(IOException::class, WavFileException::class, FileFormatNotSupportedException::class)
-    fun loadAndReadAcrossChannels(path: String, sr: Int, readDurationInSec: Int): Array<FloatArray> {
+    fun loadAndReadAcrossChannels(
+        path: String,
+        sr: Int,
+        readDurationInSec: Int
+    ): Array<FloatArray> {
         val magValues = loadAndReadAcrossChannelsWithOffset(path, sr, readDurationInSec, 0)
         return magValues
     }
@@ -215,9 +221,20 @@ class KLibrosa {
      * @param nMFCC
      * @return
      */
-    fun generateMFCCFeatures(magValues: FloatArray, mSampleRate: Int, nMFCC: Int): Array<FloatArray> {
+    fun generateMFCCFeatures(
+        magValues: FloatArray,
+        mSampleRate: Int,
+        nMFCC: Int
+    ): Array<FloatArray> {
         val mfccValues =
-            this.generateMFCCFeatures(magValues, mSampleRate, nMFCC, this.n_fft, this.n_mels, this.hop_length)
+            this.generateMFCCFeatures(
+                magValues,
+                mSampleRate,
+                nMFCC,
+                this.n_fft,
+                this.n_mels,
+                this.hop_length
+            )
 
         return mfccValues
     }
@@ -319,7 +336,15 @@ class KLibrosa {
         hop_length: Int
     ): Array<Array<Complex>> {
         val stftValues =
-            this.generateSTFTFeaturesWithPadOption(magValues, mSampleRate, nMFCC, n_fft, n_mels, hop_length, true)
+            this.generateSTFTFeaturesWithPadOption(
+                magValues,
+                mSampleRate,
+                nMFCC,
+                n_fft,
+                n_mels,
+                hop_length,
+                true
+            )
         return stftValues
     }
 
@@ -450,7 +475,8 @@ class KLibrosa {
 
         featureExtractor.sampleRate = mSampleRate.toDouble()
         featureExtractor.n_mfcc = nMFCC
-        val magValues = featureExtractor.extractInvSTFTFeaturesAsFloatValues(stftValues, paddingFlag)
+        val magValues =
+            featureExtractor.extractInvSTFTFeaturesAsFloatValues(stftValues, paddingFlag)
         return magValues
     }
 
@@ -463,9 +489,20 @@ class KLibrosa {
      * @param nMFCC
      * @return
      */
-    fun generateInvSTFTFeatures(stftValues: Array<Array<Complex>>, mSampleRate: Int, nMFCC: Int): FloatArray {
+    fun generateInvSTFTFeatures(
+        stftValues: Array<Array<Complex>>,
+        mSampleRate: Int,
+        nMFCC: Int
+    ): FloatArray {
         val magValues =
-            this.generateInvSTFTFeatures(stftValues, mSampleRate, nMFCC, this.n_fft, this.n_mels, this.hop_length)
+            this.generateInvSTFTFeatures(
+                stftValues,
+                mSampleRate,
+                nMFCC,
+                this.n_fft,
+                this.n_mels,
+                this.hop_length
+            )
         return magValues
     }
 
@@ -478,9 +515,20 @@ class KLibrosa {
      * @param nMFCC
      * @return
      */
-    fun generateSTFTFeatures(magValues: FloatArray, mSampleRate: Int, nMFCC: Int): Array<Array<Complex>> {
+    fun generateSTFTFeatures(
+        magValues: FloatArray,
+        mSampleRate: Int,
+        nMFCC: Int
+    ): Array<Array<Complex>> {
         val stftValues =
-            this.generateSTFTFeatures(magValues, mSampleRate, nMFCC, this.n_fft, this.n_mels, this.hop_length)
+            this.generateSTFTFeatures(
+                magValues,
+                mSampleRate,
+                nMFCC,
+                this.n_fft,
+                this.n_mels,
+                this.hop_length
+            )
         return stftValues
     }
 
@@ -533,7 +581,8 @@ class KLibrosa {
         readDurationInSeconds: Int,
         offsetDuration: Int
     ): FloatArray {
-        val magValueArray = readMagnitudeValuesFromFile(path, sampleRate, readDurationInSeconds, offsetDuration)
+        val magValueArray =
+            readMagnitudeValuesFromFile(path, sampleRate, readDurationInSeconds, offsetDuration)
 
         val df = DecimalFormat("#.#####", DecimalFormatSymbols(Locale.US))
         df.roundingMode = RoundingMode.CEILING
@@ -599,7 +648,8 @@ class KLibrosa {
         readDurationInSeconds: Int,
         offsetDuration: Int
     ): Array<FloatArray> {
-        val magValueArray = readMagnitudeValuesFromFile(path, sampleRate, readDurationInSeconds, offsetDuration)
+        val magValueArray =
+            readMagnitudeValuesFromFile(path, sampleRate, readDurationInSeconds, offsetDuration)
         val mNumFrames = this.noOfFrames
 
         val stereoAudioArray = Array(2) { FloatArray(mNumFrames) }
@@ -625,8 +675,13 @@ class KLibrosa {
      * @throws FileFormatNotSupportedException
      */
     @Throws(IOException::class, WavFileException::class, FileFormatNotSupportedException::class)
-    fun loadAndReadStereo(path: String, sampleRate: Int, readDurationInSeconds: Int): Array<FloatArray> {
-        val stereoAudioArray = loadAndReadStereoWithOffset(path, sampleRate, readDurationInSeconds, 0)
+    fun loadAndReadStereo(
+        path: String,
+        sampleRate: Int,
+        readDurationInSeconds: Int
+    ): Array<FloatArray> {
+        val stereoAudioArray =
+            loadAndReadStereoWithOffset(path, sampleRate, readDurationInSeconds, 0)
         return stereoAudioArray
     }
 
@@ -651,7 +706,8 @@ class KLibrosa {
         readDurationInSeconds: Int,
         offsetDuration: Int
     ): ArrayList<Float> {
-        val magValueArray = readMagnitudeValuesFromFile(path, sampleRate, readDurationInSeconds, offsetDuration)
+        val magValueArray =
+            readMagnitudeValuesFromFile(path, sampleRate, readDurationInSeconds, offsetDuration)
 
         val df = DecimalFormat("#.#####")
         df.roundingMode = RoundingMode.CEILING
@@ -690,7 +746,11 @@ class KLibrosa {
      * @throws FileFormatNotSupportedException
      */
     @Throws(IOException::class, WavFileException::class, FileFormatNotSupportedException::class)
-    fun loadAndReadAsList(path: String, sampleRate: Int, readDurationInSeconds: Int): ArrayList<Float> {
+    fun loadAndReadAsList(
+        path: String,
+        sampleRate: Int,
+        readDurationInSeconds: Int
+    ): ArrayList<Float> {
         val meanBufferList = loadAndReadAsListWithOffset(path, sampleRate, readDurationInSeconds, 0)
         return meanBufferList
     }
