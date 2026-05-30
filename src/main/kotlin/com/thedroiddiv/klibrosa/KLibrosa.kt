@@ -19,6 +19,7 @@ import java.util.stream.IntStream
  * This Class is an equivalent of Python Librosa utility used to extract the Audio features from given Wav file.
  *
  * @author abhi-rawat1
+ * @author twistios
  */
 class KLibrosa {
     private val BUFFER_SIZE = 4096
@@ -152,14 +153,12 @@ class KLibrosa {
         }
 
         // Read the magnitude values across both the channels and save them as part of
-        // multi-dimensional array
+        // multidimensional array
         val buffer = Array(mChannels) { FloatArray(mNumFrames) }
         var readFrameCount: Long = 0
-        //for (int i = 0; i < loopCounter; i++) {
         readFrameCount = wavFile.readFrames(buffer, mNumFrames, frameOffset)
 
-        //}
-        wavFile?.close()
+        wavFile.close()
 
         return buffer
     }
